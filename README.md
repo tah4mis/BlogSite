@@ -57,6 +57,3 @@ Varsayılan admin kullanıcı bilgileri:
 - Bootstrap 5
 - Identity Framework
 
-## 📝 Lisans
-
-Bu proje MIT lisansı altında lisanslanmıştır. Daha fazla bilgi için [LICENSE](LICENSE) dosyasına bakın. 
