@@ -1,0 +1,24 @@
+@{
+    ViewData["Title"] = "Erişim Reddedildi";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h1 class="card-title text-danger">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        Erişim Reddedildi
+                    </h1>
+                    <p class="card-text">
+                        Bu sayfaya erişim yetkiniz bulunmamaktadır.
+                    </p>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">
+                        <i class="bi bi-house"></i> Ana Sayfaya Dön
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

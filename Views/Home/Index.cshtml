@@ -1,0 +1,100 @@
+﻿@{
+    ViewData["Title"] = "Ana Sayfa";
+}
+
+<div class="container mt-4">
+    <!-- Hero Section -->
+    <div class="p-4 p-md-5 mb-4 text-white rounded bg-dark">
+        <div class="col-md-8 px-0">
+            <h1 class="display-4">Blog Dünyasına Hoş Geldiniz</h1>
+            <p class="lead my-3">Teknoloji, yazılım geliştirme ve yapay zeka hakkında güncel makaleler, deneyimler ve bilgi paylaşımları.</p>
+            <p class="lead mb-0">
+                <a asp-controller="Article" asp-action="Index" class="text-white fw-bold">Tüm Makaleleri Keşfet <i class="bi bi-arrow-right"></i></a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Featured Articles and Categories Grid -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h3 class="mb-4 border-bottom pb-2">
+                <i class="bi bi-stars"></i> Son Eklenen Makaleler
+            </h3>
+            @foreach (var article in ViewBag.RecentArticles)
+            {
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">@article.Title</h5>
+                        <p class="card-text text-muted small">
+                            <i class="bi bi-person"></i> @article.Author.UserName |
+                            <i class="bi bi-calendar"></i> @article.PublishedAt.ToString("dd MMMM yyyy") |
+                            <i class="bi bi-folder"></i> @article.Category.Name
+                        </p>
+                        <p class="card-text">
+                            @(article.Content.Length > 200 ? article.Content.Substring(0, 200) + "..." : article.Content)
+                        </p>
+                        <a asp-controller="Article" asp-action="Details" asp-route-id="@article.Id" 
+                           class="btn btn-outline-primary btn-sm">Devamını Oku</a>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-md-4">
+            <!-- Categories Card -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <i class="bi bi-folder"></i> Kategoriler
+                </div>
+                <div class="card-body">
+                    @foreach (var category in ViewBag.Categories)
+                    {
+                        <a asp-controller="Article" asp-action="Index" asp-route-category="@category.Name" 
+                           class="btn btn-outline-primary mb-2 me-2">
+                            @category.Name
+                            <span class="badge bg-secondary">@category.Articles.Count</span>
+                        </a>
+                    }
+                </div>
+            </div>
+
+            <!-- Quick Stats Card -->
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <i class="bi bi-graph-up"></i> İstatistikler
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="bi bi-file-text"></i> Toplam Makale: 
+                            <span class="badge bg-primary">@ViewBag.TotalArticles</span>
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-people"></i> Toplam Yazar: 
+                            <span class="badge bg-primary">@ViewBag.TotalAuthors</span>
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-folder"></i> Toplam Kategori: 
+                            <span class="badge bg-primary">@ViewBag.Categories.Count</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .bg-dark {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%) !important;
+        }
+        .card {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+}

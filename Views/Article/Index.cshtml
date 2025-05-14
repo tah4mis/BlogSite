@@ -1,0 +1,129 @@
+@model IEnumerable<BlogSite.Models.Article>
+
+@{
+    ViewData["Title"] = "Makaleler";
+}
+
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1>@ViewData["Title"]</h1>
+        </div>
+        <div class="col-md-4 text-end">
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <a asp-action="Create" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Yeni Makale
+                </a>
+            }
+        </div>
+    </div>
+
+    <!-- Arama ve Filtreleme Formu -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <form method="get" class="row g-3">
+                        <div class="col-md-5">
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-search"></i>
+                                </span>
+                                <input type="text" name="searchString" class="form-control" 
+                                       placeholder="Makale ara..." value="@ViewBag.SearchString">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-folder"></i>
+                                </span>
+                                <select name="category" class="form-select">
+                                    <option value="">Tüm Kategoriler</option>
+                                    @foreach (var category in ViewBag.Categories)
+                                    {
+                                        <option value="@category.Name" selected="@(ViewBag.Category == category.Name)">
+                                            @category.Name
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-search"></i> Ara
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Makale Listesi -->
+    @if (Model.Any())
+    {
+        foreach (var article in Model)
+        {
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">@article.Title</h2>
+                    <div class="text-muted mb-3">
+                        <small>
+                            <i class="bi bi-person"></i> @article.Author?.UserName |
+                            <i class="bi bi-calendar"></i> @article.PublishedAt.ToString("dd MMMM yyyy") |
+                            <i class="bi bi-folder"></i> @article.Category?.Name
+                        </small>
+                    </div>
+                    <p class="card-text">
+                        @(article.Content.Length > 300 
+                            ? article.Content.Substring(0, 300) + "..." 
+                            : article.Content)
+                    </p>
+                    <a asp-action="Details" asp-route-id="@article.Id" class="btn btn-primary">
+                        <i class="bi bi-book"></i> Devamını Oku
+                    </a>
+                </div>
+            </div>
+        }
+
+        <!-- Sayfalama -->
+        @if (ViewBag.TotalPages > 1)
+        {
+            <nav aria-label="Sayfalama">
+                <ul class="pagination justify-content-center">
+                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("Index", new { page = i, searchString = ViewBag.SearchString, category = ViewBag.Category })">
+                                @i
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        }
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> Henüz makale bulunmuyor.
+        </div>
+    }
+</div>
+
+@section Styles {
+    <style>
+        .card-title {
+            color: #2c3e50;
+        }
+        .text-muted small {
+            font-size: 0.9rem;
+        }
+        .card-text {
+            color: #34495e;
+            line-height: 1.6;
+        }
+    </style>
+} 
